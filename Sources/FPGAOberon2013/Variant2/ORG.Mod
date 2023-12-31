@@ -70,17 +70,17 @@ MODULE ORG; (* N.Wirth, 16.4.2016 / 4.4.2017 / 31.5.2019  Oberon compiler; code 
   END Put1;
 
   PROCEDURE Put1a(op, a, b, im: LONGINT);
-    VAR r: INTEGER;
+    VAR c: INTEGER;
   BEGIN (*same as Put1, but with range test -C16 <= im < C16*)
     IF (im >= -C16) & (im < C16) THEN Put1(op, a, b, im)
     ELSIF op = Mov THEN
       Put1(Mov+U, a, 0, im DIV C16);
       IF im MOD C16 # 0 THEN Put1(Ior, a, a, im MOD C16) END
-    ELSE r := RH;
-      IF (a = RH) OR (a = RH+1) THEN RH := a+1 ELSIF b = RH THEN RH := b+1 END ;
-      Put1(Mov+U, RH, 0, im DIV C16);
-      IF im MOD C16 # 0 THEN Put1(Ior, RH, RH, im MOD C16) END ;
-      Put0(op, a, b, RH); RH := r
+    ELSE
+      IF (a = RH) OR (a = RH+1) THEN c := a+1 ELSIF b = RH THEN c := b+1 ELSE c := RH END ;
+      Put1(Mov+U, c, 0, im DIV C16);
+      IF im MOD C16 # 0 THEN Put1(Ior, c, c, im MOD C16) END ;
+      Put0(op, a, b, c)
     END
   END Put1a;
 
