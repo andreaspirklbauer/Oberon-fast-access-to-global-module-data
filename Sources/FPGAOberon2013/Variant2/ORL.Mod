@@ -174,12 +174,12 @@ MODULE ORL;  (*Oberon boot linker/loader for RISC / AP 1.5.23*)
             pno := inst DIV C24 MOD C4; (*R.a of first instruction*)
             SYSTEM.GET(adr+4, inst); vno := inst MOD C8;
             SYSTEM.GET(impmod.ent + vno*4, offset);
-            IF ODD(inst DIV C8) THEN INC(offset, impmod.code) ELSE INC(offset, impmod.data) END ;
-            SYSTEM.PUT(adr, MOV+U + pno*C24 + (offset - Start) DIV C16);
+            IF ODD(inst DIV C8) THEN INC(offset, impmod.code - Start) ELSE INC(offset, impmod.data - Start) END ;
+            SYSTEM.PUT(adr, MOV+U + pno*C24 + offset DIV C16);
             pno := inst DIV C24 MOD C4; (*R.a of second instruction*)
             vno := inst DIV C20 MOD C4; (*R.b of second instruction*)
             IF inst DIV C30 = F2 THEN inst := (inst DIV C24) * C24 + vno*C20 ELSE inst := IOR + pno*C24 + pno*C20 END ;
-            SYSTEM.PUT(adr+4, inst + (offset - Start) MOD C16)
+            SYSTEM.PUT(adr+4, inst + offset MOD C16)
           END ;
           adr := adr - disp*4
         END ;
